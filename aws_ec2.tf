@@ -20,8 +20,8 @@ resource "aws_key_pair" "ssh_key" {
 
 resource "aws_security_group" "allow_ports" {
   name        = "allow_ports"
-  description = "Allow 22 and 80 inbound traffic"
-  vpc_id      = "vpc-ded136b5"
+  description = "Allow traffic on port 22 and 80"
+  vpc_id      = "XXXXXXXXX"
 
   ingress {
     from_port   = 80
