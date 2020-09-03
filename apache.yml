@@ -1,0 +1,30 @@
+---
+ - hosts: webserver
+   name: Install and configure apache httpd on the newly created EC2 instance
+   gather_facts: True
+   become: true
+   remote_user: ec2-user
+
+
+   tasks:
+### Install httpd on remote server
+   - name: Install httpd on remote server
+     yum:
+        name: httpd
+        state: present
+     tags:
+       - apply
+
+### Start httpd service on the remote server
+   - name: Ensure httpd service is up and running
+     service:
+        name: httpd
+        state: started
+     tags:
+        - apply
+
+### Feed details to index.html file which can be viewed globally
+   - name: Create an index.html file
+     shell: echo "My Public IP is $(curl -s ifconfig.me)" > /var/www/html/index.html
+     tags:
+        - apply
