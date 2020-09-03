@@ -1,0 +1,65 @@
+---
+ - hosts: localhost
+   name: EC2 deployment using terraform code
+   gather_facts: True
+
+   vars:
+        project_dir : "/home/ec2-user/ec2_provisioning"
+
+   tasks:
+### Below task is to initialize terraform each time the play is run
+   - name: Initialize terraform
+     command: "sudo terraform init {{ project_dir }} "
+     register: init_result
+     tags:
+        - apply
+        - destroy
+
+   - debug:
+       var: init_result.stdout_lines
+
+### Below task is to create an ec2 instance which shall be further used to run apache httpd
+   - name: Apply terraform and provision ec2 instance
+     terraform:
+       project_path: "{{ project_dir }}"
+       state: present
+       lock: false
+     register: apply_result
+     tags:
+         - apply
+   - debug:
+        var: apply_result.stdout_lines
+
+### Below task is used to destroy the infra created when "destroy" tags are used
+   - name: Run command to destroy created infrastructure
+     command: sudo ansible localhost -m shell -a "echo yes | sudo terraform destroy -lock=false"
+     register: Execution_result
+     ignore_errors: True
+     tags:
+        - destroy
+
+### Local testing to check if the publicIP of the EC2 instance has been recorded or not, for further use
+   - name: Capture IP from ec2 provisioning output and use it further
+     shell: IP=$(terraform output publicIP)
+     ignore_errors: True
+     tags:
+        - apply
+
+### Create an inventory file on the local system with details of newly created EC2 instance and specify details related to SSH connectivity
+   - name: Create an ansible inventory file with the newly created ec2 instance IP and connection details
+     ignore_errors: True
+     shell: |
+       publicip=`terraform output publicIP`
+       echo '###dynamic ansible host file#####' >/etc/ansible/hosts
+       echo '[webserver]'>>/etc/ansible/hosts
+       echo "$publicip"' ansible_connection=ssh ansible_user=ec2-user ansible_ssh_private_key_file=/home/ec2-user/.ssh/id_rsa'>>/etc/ansible/hosts
+       echo '###### End #####'>>/etc/ansible/hosts
+     tags:
+        - apply
+
+### Below task is to pause the play execution for 2 minutes so that the EC2 instance spins up and is reachable
+   - name: Sleep for 120 seconds and wait for EC2 to come up before resuming play
+     wait_for:
+        timeout: 120
+     tags:
+        - apply
