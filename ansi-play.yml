@@ -4,11 +4,6 @@
    gather_facts: True
 #   become: true
 
-   vars_prompt:
-    - name: Variable
-      prompt: "Any variable"
-      private: no
-
    tasks:
 
    - name: Run command to check
