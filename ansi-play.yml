@@ -26,8 +26,7 @@
      register: Execution_result
      ignore_errors: True
      tags:
-        - destroy
-		
+        - destroy	
    - name: Install apache packages, ensure httpd is running, will update index.html with public IP.
      yum:
        name: httpd
@@ -36,5 +35,5 @@
        name: httpd 
        state: started
      shell: somescript.sh >> somelog.txt
-	 tags:
-	    -webserver
+     tags:
+       -webserver
