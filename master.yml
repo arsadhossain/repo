@@ -1,0 +1,6 @@
+### Master playbook used to execute two playbooks
+### First playbook: infra.yml used to create EC2 instance using Terraform
+### Second playbook: apache.yml used to setup httpd on remote EC2 instance created in previous step
+---
+- import_playbook: infra.yml
+- import_playbook: apache.yml
