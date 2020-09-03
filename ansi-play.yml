@@ -1,5 +1,5 @@
 ---
- - hosts: webservere
+ - hosts: webserver
    name: ec2 deployment using terraform and httpd setup using ansible
    gather_facts: True
 #   become: true
