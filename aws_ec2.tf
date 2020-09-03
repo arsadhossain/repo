@@ -1,6 +1,6 @@
 provider "aws" {
-        access_key = "AKIATLGT42DGEXZXJEKT"
-        secret_key = "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"
+        access_key = "XXXXXXXXXX"
+        secret_key = "XXXXXXXXXX"
         region     = "ap-south-1"
 }
 
@@ -31,7 +31,7 @@ resource "aws_key_pair" "ssh_key" {
 resource "aws_security_group" "allow_ports" {
   name        = "allow_ports"
   description = "Allow traffic on port 22 and 80"
-  vpc_id      = "vpc-ded136b5"
+  vpc_id      = "XXXXXXXXXX"
 
   ingress {
     from_port   = 80
