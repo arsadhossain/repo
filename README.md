@@ -16,7 +16,7 @@ ansible-playbook -vvv master.yaml --tags "apply"
 
 ansible-playbook -vvv master.yml --tags "destroy"
 
-#Scripts
+#below are teh Scripts
 1. aws_ec2.tf ##terraform code used to create AWS EC2, copy id_rsa.pub file to remote, attach EIP, copy PublicIP of instance to /etc/ansible/hosts in localhost - Outputs: Instance ID, Public Elastic IP Address attached to Instance
 2. master.yml ## Used to run both the playbooks in order. 1. Run infra.yml 2. Run apache.yml
 3. infra.yml: Create EC2 using terraform file aws_ec2.tf
